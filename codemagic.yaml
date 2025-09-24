@@ -1,0 +1,20 @@
+# codemagic.yaml
+workflows:
+  flutter-android:
+    name: Flutter Android Build
+    environment:
+      groups:
+        - keystore_credentials
+      vars:
+        BUNDLE_ID: "com.example.martyrs"
+        APP_NAME: "متتبع الشهداء"
+    scripts:
+      - name: Build Android APK
+        script: |
+          flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
