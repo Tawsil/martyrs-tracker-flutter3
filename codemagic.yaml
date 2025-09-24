@@ -1,20 +1,22 @@
-# codemagic.yaml
 workflows:
-  flutter-android:
-    name: Flutter Android Build
+  android-workflow:
+    name: Android Build
     environment:
-      groups:
-        - keystore_credentials
+      groups: []
       vars:
-        BUNDLE_ID: "com.example.martyrs"
-        APP_NAME: "متتبع الشهداء"
+        ANDROID_COMPILE_SDK: "33"
+        ANDROID_MIN_SDK: "21"
+        ANDROID_TARGET_SDK: "33"
     scripts:
-      - name: Build Android APK
+      - name: Set up Android environment
         script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+          echo "flutter.compileSdkVersion=$ANDROID_COMPILE_SDK" > "$CM_BUILD_DIR/android/gradle.properties"
+          echo "flutter.minSdkVersion=$ANDROID_MIN_SDK" >> "$CM_BUILD_DIR/android/gradle.properties"
+          echo "flutter.targetSdkVersion=$ANDROID_TARGET_SDK" >> "$CM_BUILD_DIR/android/gradle.properties"
+      - name: Build application
+        script: |
+          flutter pub get
           flutter build apk --release
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
-    publishing:
-      email:
-        recipients:
-          - your-email@example.com
